@@ -19,6 +19,7 @@
 ## ⚙️ Dependências (Debian/Ubuntu/Mint)
 ```bash
 sudo apt install flex bison build-essential libfl-dev
+```
 
 ## 🚀 Como Compilar e Executar
 1. Compilar o projeto:
