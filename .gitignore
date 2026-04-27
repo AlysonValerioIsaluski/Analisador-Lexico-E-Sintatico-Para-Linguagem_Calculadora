@@ -1,5 +1,6 @@
 calc
 calc.tab.c
 calc.tab.h
+calc.lex.c
 ia.md
 lex.yy.c
