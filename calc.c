@@ -288,6 +288,11 @@ double eval(struct ast *a) {
                 }
             }
             break;
+            
+            
+        /*IMPLEMENTAR FOR*/
+
+        
 
         /* lista de comandos (L) */
         case 'L': eval(a->l); v = eval(a->r); break;
@@ -311,6 +316,6 @@ void yyerror(char *s, ...) {
 }
 
 int main() {
-    printf("> ");
+    printf(">~: ");
     return yyparse();
 }
