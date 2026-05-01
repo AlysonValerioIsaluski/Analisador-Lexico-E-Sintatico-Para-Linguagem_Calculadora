@@ -315,7 +315,39 @@ void yyerror(char *s, ...) {
     va_end(ap);
 }
 
-int main() {
-    printf(">~: ");
-    return yyparse();
+int main(int argc, char **argv) {
+    if (argc > 3) {
+        fprintf(stderr, "Uso: %s  OU  %s <arquivo_in>  OU  %s <arquivo_in> <arquivo_out>\n", argv[0], argv[0], argv[0]);
+        return 1;
+    }
+
+    // Sem argumentos -> Execução interativa
+    if (argc == 1) {
+        printf(">~: ");
+        return yyparse();
+    }
+
+    // 1 argumento -> Leitura do <arquivo_in> e output de nome "out.txt"
+    // 2 argumentos -> Leitura do <arquivo_in> e output de nome <arquivo_saida>
+    FILE *in = fopen(argv[1], "r");
+    if (!in) {
+        perror(argv[1]);
+        return 1;
+    }
+
+    char *out_filename = (argc == 3) ? argv[2] : "out.txt";
+    FILE *out = freopen(out_filename, "w", stdout);
+    if (!out) {
+        perror("Erro ao abrir/criar arquivo de saida");
+        return 1;
+    }
+
+    yyrestart(in);
+    yylineno = 1;
+    yyparse();
+
+    fclose(in);
+    fclose(out);
+
+    return 0;
 }
