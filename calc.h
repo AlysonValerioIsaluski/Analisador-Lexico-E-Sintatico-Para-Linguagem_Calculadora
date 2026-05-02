@@ -99,3 +99,4 @@ void treefree(struct ast *);
 /* Funcoes Bison/Flex */
 int yylex(void);
 int yyparse(void);
+void yyrestart(FILE *input_file);
