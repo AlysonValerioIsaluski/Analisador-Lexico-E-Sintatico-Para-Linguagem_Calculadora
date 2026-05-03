@@ -4,12 +4,20 @@
 extern int yylineno;
 void yyerror (char *s, ...);
 
+struct ref {
+    struct ref *next;
+    char *filename;
+    int flags;
+    int lineno;
+};
+
 /* tab. de simbolos */
 struct symbol { /* um nome de variavel */
     char *name;
     double value;
     struct ast *func; /* stmt para funcao */
     struct symlist *syms; /* lista de argumentos */
+    struct ref *reflist;
 };
 
 /* tab. de simbolos de tamaho fixo */
@@ -100,3 +108,8 @@ void treefree(struct ast *);
 int yylex(void);
 int yyparse(void);
 void yyrestart(FILE *input_file);
+
+/* Para Tabela de Simbolos */
+extern char *curfilename;
+void addref(int lineno, char *filename, char *word, int flags);
+void printrefs(void); // Para debug

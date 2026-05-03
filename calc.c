@@ -8,6 +8,7 @@
 #include "calc.h"
 
 struct symbol symtab[NHASH];
+char *curfilename = "(stdin)";
 
 /* funcoes em C para TS */
 static unsigned symhash(char *sym) {
@@ -30,10 +31,12 @@ struct symbol *lookup(char *sym) {
             sp->value = 0;
             sp->func = NULL;
             sp->syms = NULL;
+            sp->reflist = NULL;
             return sp;
         }
 
-        if(++sp >= symtab + NHASH) sp = symtab; /* tenta a prox. entrada */
+        if(++sp >= symtab + NHASH)
+            sp = symtab; /* tenta a prox. entrada */
     }
     yyerror("overflow na tab simbolos\n");
     abort(); /* tabela estah cheia */
@@ -306,6 +309,40 @@ double eval(struct ast *a) {
     return v;
 }
 
+// Cria uma lista encadeada (struct ref) atrelada a cada variável da Tabela de Símbolos
+// Registra nome do arquivo e número da linha toda vez que o lexer identifica um nome de variável
+void addref(int lineno, char *filename, char *word, int flags) {
+    struct ref *r;
+    struct symbol *sp = lookup(word);
+    
+    /* verificar se é mesma linha e arquivo para evitar duplicatas */
+    if (sp->reflist && sp->reflist->lineno == lineno && sp->reflist->filename == filename) return;
+    
+    r = malloc(sizeof(struct ref));
+    if (!r) { fputs("sem espaco\n", stderr); abort(); }
+    
+    r->next = sp->reflist;
+    r->filename = filename;
+    r->lineno = lineno;
+    r->flags = flags;
+    sp->reflist = r;
+}
+
+void printrefs(void) {
+    printf("\n--- TABELA DE SIMBOLOS ---\n");
+    for (int i = 0; i < NHASH; i++) {
+        struct symbol *sp = &symtab[i];
+        if (sp->name) {
+            printf("ID: %s\n", sp->name);
+            struct ref *rp = sp->reflist;
+            while (rp) {
+                printf("  -> Linha: %d | Arq: %s\n", rp->lineno, rp->filename);
+                rp = rp->next;
+            }
+        }
+    }
+}
+
 void yyerror(char *s, ...) {
     va_list ap;
     va_start(ap, s);
@@ -334,6 +371,7 @@ int main(int argc, char **argv) {
         perror(argv[1]);
         return 1;
     }
+    curfilename = argv[1]; /* Salva o nome do arquivo atual */
 
     char *out_filename = (argc == 3) ? argv[2] : "out.txt";
     FILE *out = freopen(out_filename, "w", stdout);
@@ -345,6 +383,8 @@ int main(int argc, char **argv) {
     yyrestart(in);
     yylineno = 1;
     yyparse();
+
+    printrefs(); // imprime tabela de símbolos
 
     fclose(in);
     fclose(out);
