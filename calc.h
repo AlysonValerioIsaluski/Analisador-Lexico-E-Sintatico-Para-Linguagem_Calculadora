@@ -72,7 +72,7 @@ struct flow {
 
 struct forloop {
     int nodetype; /* tipo P */
-    struct ast *init; /* atribuicao da variavel de controle */
+    struct ast *init; /* inicializacao da variavel de controle */
     struct ast *cond; /* condicao do laco */
     struct ast *inc; /* incremento do laco */
     struct ast *tl; /* ramo para lista de comandos (similar ao while) */

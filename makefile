@@ -13,7 +13,7 @@ BISON_H = calc.tab.h
 FLEX_L  = calc.l
 FLEX_C  = calc.lex.c
 
-SRC_C   = calc.c
+SRC_C   = main.c
 
 all: $(TARGET)
 

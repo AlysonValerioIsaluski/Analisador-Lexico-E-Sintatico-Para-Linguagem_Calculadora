@@ -39,10 +39,10 @@ stmt: IF exp THEN list { $$ = newflow('I', $2, $4, NULL); }
     | WHILE exp DO list { $$ = newflow('W', $2, $4, NULL); }
     | FOR '(' init ';' exp ';' exp ')' list { $$ = newforloop('P', $3, $5, $7, $9); }
     | exp
-    | ';' { $$ = NULL; } /* Aceita ; solto como comando */
     ;
 
 list: /* vazio! */ { $$ = NULL; }
+    | ';' { $$ = NULL; } /* Aceita corpo de laco vazio */
     | stmt ';' list { if ($3 == NULL) $$ = $1; else $$ = newast('L', $1, $3); }
     ;
 
@@ -74,8 +74,11 @@ calclist: /* vazio! */
         | calclist EOL { printf("> "); } /* Ignora \n soltos */
         | calclist stmt EOL {
             double res = eval($2);
-            /* Imprime apenas se nao for laco ou atribuicao */
-            if($2 && $2->nodetype != '=' && $2->nodetype != 'W' && $2->nodetype != 'P') {
+            /* Verifica se o no eh a funcao print */
+            int is_print = ($2 && $2->nodetype == 'F' && ((struct fncall *)$2)->functype == B_print);
+            
+            /* Imprime apenas se nao for laco, atribuicao ou print */
+            if($2 && $2->nodetype != '=' && $2->nodetype != 'W' && $2->nodetype != 'P' && !is_print) {
                 printf("= %4.4g\n", res);
             }
             printf("> ");

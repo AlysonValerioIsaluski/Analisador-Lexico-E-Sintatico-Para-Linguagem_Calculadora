@@ -459,7 +459,7 @@ int main(int argc, char **argv) {
     yylineno = 1;
     yyparse();
 
-    printrefs(); // imprime tabela de símbolos
+    printrefs(); // imprime tabela de símbolos (opcional)
 
     fclose(in);
     fclose(out);
