@@ -30,6 +30,10 @@ EXP ([Ee][-+]?[0-9]+)
 ">=" { yylval.fn = 5; return CMP; }
 "<=" { yylval.fn = 6; return CMP; }
 
+ /* operadores lógicos, todos sao token LOGIC */
+"&&" { yylval.fn = 7; return LOGIC; }
+"||" { yylval.fn = 8; return LOGIC; }
+
  /* palavras-chave */
 "if"    { return IF; }
 "then"  { return THEN; }
@@ -37,6 +41,7 @@ EXP ([Ee][-+]?[0-9]+)
 "while" { return WHILE; }
 "do"    { return DO; }
 "let"   { return LET; }
+"for"   { return FOR; }
 
  /* funcoes pre-definidas */
 "sqrt"  { yylval.fn = B_sqrt; return FUNC; }

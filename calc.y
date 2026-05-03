@@ -19,12 +19,13 @@
 %token <fn> FUNC
 %token EOL
 
-%token IF THEN ELSE WHILE DO LET
+%token IF THEN ELSE WHILE DO LET FOR
 
 %nonassoc <fn> CMP
 %right '='
 %left '+' '-'
 %left '*' '/'
+%left <fn> LOGIC
 
 %type <a> exp stmt list explist
 %type <sl> symlist
