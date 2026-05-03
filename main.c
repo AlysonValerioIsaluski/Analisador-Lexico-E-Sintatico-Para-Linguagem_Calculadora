@@ -1,4 +1,4 @@
-/* Funcoes Auxiliares para uma calculadora avancada */
+/* calc.c - Funcoes Auxiliares e Lógica Central */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -8,12 +8,13 @@
 #include "calc.h"
 
 struct symbol symtab[NHASH];
+char *curfilename = "(stdin)";
 
 /* funcoes em C para TS */
 static unsigned symhash(char *sym) {
     unsigned int hash = 0;
     unsigned c;
-    while(c = *sym++) hash = hash*9 ^ c;
+    while((c = *sym++)) hash = hash*9 ^ c;
     return hash;
 }
 
@@ -25,20 +26,23 @@ struct symbol *lookup(char *sym) {
         if(sp->name && !strcasecmp(sp->name, sym))
             return sp;
 
-        if(!sp->name) { /* nova entrada na TS */
+        if(!sp->name) { 
             sp->name = strdup(sym);
             sp->value = 0;
             sp->func = NULL;
             sp->syms = NULL;
+            sp->reflist = NULL;
+            sp->is_initialized = 0; 
             return sp;
         }
-
-        if(++sp >= symtab + NHASH) sp = symtab; /* tenta a prox. entrada */
+        if(++sp >= symtab + NHASH)
+            sp = symtab; /* tenta a prox. entrada */
     }
     yyerror("overflow na tab simbolos\n");
     abort(); /* tabela estah cheia */
 }
 
+/* Construtores de AST */
 struct ast *newast(int nodetype, struct ast *l, struct ast *r) {
     struct ast *a = malloc(sizeof(struct ast));
     if(!a) { yyerror("sem espaco"); exit(0); }
@@ -60,6 +64,15 @@ struct ast *newcmp(int cmptype, struct ast *l, struct ast *r) {
     struct ast *a = malloc(sizeof(struct ast));
     if(!a) { yyerror("sem espaco"); exit(0); }
     a->nodetype = '0' + cmptype;
+    a->l = l;
+    a->r = r;
+    return a;
+}
+
+struct ast *newlogic(int logictype, struct ast *l, struct ast *r) {
+    struct ast *a = malloc(sizeof(struct ast));
+    if(!a) { yyerror("sem espaco"); exit(0); }
+    a->nodetype = '0' + logictype;
     a->l = l;
     a->r = r;
     return a;
@@ -110,11 +123,24 @@ struct ast *newflow(int nodetype, struct ast *cond, struct ast *tl, struct ast *
     return (struct ast *)a;
 }
 
+struct ast *newforloop(int nodetype, struct ast *init, struct ast *cond, struct ast *inc, struct ast *tl) {
+    struct forloop *a = malloc(sizeof(struct forloop));
+    if(!a) { yyerror("sem espaco"); exit(0); }
+    a->nodetype = nodetype;
+    a->init = init;
+    a->cond = cond;
+    a->inc = inc;
+    a->tl = tl;
+    return (struct ast *)a;
+}
+
+/* Destrutor de AST */
 void treefree(struct ast *a) {
+    if(!a) return;
     switch(a->nodetype) {
         /* duas subarvores */
         case '+': case '-': case '*': case '/': case 'L':
-        case '1': case '2': case '3': case '4': case '5': case '6':
+        case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8':
             treefree(a->r);
         /* uma subarvore */
         case 'C': case 'F':
@@ -123,7 +149,7 @@ void treefree(struct ast *a) {
         case 'K': case 'N':
             break;
         case '=':
-            free(((struct symasgn *)a)->v);
+            treefree(((struct symasgn *)a)->v);
             break;
         /* acima de 3 subarvores */
         case 'I': case 'W':
@@ -131,11 +157,18 @@ void treefree(struct ast *a) {
             if(((struct flow *)a)->tl) treefree(((struct flow *)a)->tl);
             if(((struct flow *)a)->el) treefree(((struct flow *)a)->el);
             break;
+        case 'P':
+            if(((struct forloop *)a)->init) treefree(((struct forloop *)a)->init);
+            if(((struct forloop *)a)->cond) treefree(((struct forloop *)a)->cond);
+            if(((struct forloop *)a)->inc)  treefree(((struct forloop *)a)->inc);
+            if(((struct forloop *)a)->tl)   treefree(((struct forloop *)a)->tl);
+            break;
         default: printf("erro interno: free bad node %c\n", a->nodetype);
     }
     free(a); /* sempre libera o proprio no */
 }
 
+/* Funcoes Tabela de Simbolos e Funcoes Auxiliares */
 struct symlist *newsymlist(struct symbol *sym, struct symlist *next) {
     struct symlist *sl = malloc(sizeof(struct symlist));
     if(!sl) { yyerror("sem espaco"); exit(0); }
@@ -187,7 +220,8 @@ static double calluser(struct ufncall *f) {
     oldval = (double *)malloc(nargs * sizeof(double));
     newval = (double *)malloc(nargs * sizeof(double));
     if(!oldval || !newval) {
-        yyerror("Sem espaco em %s", fn->name); return 0.0;
+        yyerror("Sem espaco em %s", fn->name);
+        return 0.0;
     }
 
     /* avaliacao de argumentos passados na chamada */
@@ -237,6 +271,34 @@ void dodef(struct symbol *name, struct symlist *syms, struct ast *func) {
     name->func = func;
 }
 
+/*
+NodeTypes para eval:
+
+K: Constante
+N: Referência de Nome
+=: Atribuição
+
++: Operação de Soma
+-: Operação de Subtração
+*: Operação de Multiplicação
+/: Operação de Divisão
+
+1: Maior que
+2: Menor que
+3: Diferente de
+4: Igual a
+5: Maior ou Igual a
+6: Menor ou igual a
+7: Operação lógica AND
+8: Operação lógica OR
+
+I: If/then/else
+W: While
+P: For
+L: Lista de comandos
+F: Chamada de função reservada
+C: Chamada de função de usuário 
+*/
 double eval(struct ast *a) {
     double v;
     if(!a) {
@@ -247,11 +309,23 @@ double eval(struct ast *a) {
     switch(a->nodetype) {
         /* constante */
         case 'K': v = ((struct numval *)a)->number; break;
-        /* referencia de nome */
-        case 'N': v = ((struct symref *)a)->s->value; break;
-        /* atribuicao */
-        case '=': v = ((struct symasgn *)a)->s->value = eval(((struct symasgn *)a)->v); break;
 
+        /* referencia de nome */
+        case 'N':
+            if (((struct symref *)a)->s->is_initialized == 0) {
+                yyerror("Variavel '%s' nao inicializada antes do uso", ((struct symref *)a)->s->name);
+                return 0.0;
+            }
+            v = ((struct symref *)a)->s->value;
+            break;
+
+        /* atribuicao */
+        case '=':
+            v = eval(((struct symasgn *)a)->v);
+            ((struct symasgn *)a)->s->value = v;
+            ((struct symasgn *)a)->s->is_initialized = 1; 
+            break;
+        
         /* expressoes aritimeticas */
         case '+': v = eval(a->l) + eval(a->r); break;
         case '-': v = eval(a->l) - eval(a->r); break;
@@ -266,19 +340,25 @@ double eval(struct ast *a) {
         case '5': v = (eval(a->l) >= eval(a->r)) ? 1 : 0; break;
         case '6': v = (eval(a->l) <= eval(a->r)) ? 1 : 0; break;
 
+        /* AND e OR*/
+        case '7': v = (eval(a->l) != 0 && eval(a->r) != 0); break;
+        case '8': v = (eval(a->l) != 0 || eval(a->r) != 0); break;
+        
         /* if/then/else */
         case 'I':
             if(eval(((struct flow *)a)->cond) != 0) {
                 if(((struct flow *)a)->tl) {
                     v = eval(((struct flow *)a)->tl);
-                } else v = 0.0;
+                }
+                else v = 0.0;
             } else {
                 if(((struct flow *)a)->el) {
                     v = eval(((struct flow *)a)->el);
-                } else v = 0.0;
+                }
+                else v = 0.0;
             }
             break;
-
+        
         /* while/do */
         case 'W':
             v = 0.0;
@@ -288,11 +368,18 @@ double eval(struct ast *a) {
                 }
             }
             break;
-            
-            
-        /*IMPLEMENTAR FOR*/
-
         
+        /* for */
+        case 'P':
+            v = 0.0;
+            eval(((struct forloop *)a)->init);
+
+            while(eval(((struct forloop *)a)->cond) != 0) {
+                if(((struct forloop *)a)->tl)
+                    v = eval(((struct forloop *)a)->tl);
+                eval(((struct forloop *)a)->inc);
+            }
+            break;
 
         /* lista de comandos (L) */
         case 'L': eval(a->l); v = eval(a->r); break;
@@ -306,6 +393,40 @@ double eval(struct ast *a) {
     return v;
 }
 
+// Cria uma lista encadeada (struct ref) atrelada a cada variável da Tabela de Símbolos
+// Registra nome do arquivo e número da linha toda vez que o lexer identifica um nome de variável
+void addref(int lineno, char *filename, char *word, int flags) {
+    struct ref *r;
+    struct symbol *sp = lookup(word);
+    
+    /* verificar se é mesma linha e arquivo para evitar duplicatas */
+    if (sp->reflist && sp->reflist->lineno == lineno && sp->reflist->filename == filename) return;
+    
+    r = malloc(sizeof(struct ref));
+    if (!r) { fputs("sem espaco\n", stderr); abort(); }
+    
+    r->next = sp->reflist;
+    r->filename = filename;
+    r->lineno = lineno;
+    r->flags = flags;
+    sp->reflist = r;
+}
+
+void printrefs(void) {
+    printf("\n\n--- TABELA DE SIMBOLOS ---\n");
+    for (int i = 0; i < NHASH; i++) {
+        struct symbol *sp = &symtab[i];
+        if (sp->name) {
+            printf("ID: %s\n", sp->name);
+            struct ref *rp = sp->reflist;
+            while (rp) {
+                printf("  -> Linha: %d | Arq: %s\n", rp->lineno, rp->filename);
+                rp = rp->next;
+            }
+        }
+    }
+}
+
 void yyerror(char *s, ...) {
     va_list ap;
     va_start(ap, s);
@@ -315,13 +436,13 @@ void yyerror(char *s, ...) {
     va_end(ap);
 }
 
+/* I/O Principal */
 int main(int argc, char **argv) {
     if (argc > 3) {
         fprintf(stderr, "Uso: %s  OU  %s <arquivo_in>  OU  %s <arquivo_in> <arquivo_out>\n", argv[0], argv[0], argv[0]);
         return 1;
     }
 
-    // Sem argumentos -> Execução interativa
     if (argc == 1) {
         printf(">~: ");
         return yyparse();
@@ -334,17 +455,20 @@ int main(int argc, char **argv) {
         perror(argv[1]);
         return 1;
     }
+    curfilename = argv[1]; /* Salva o nome do arquivo atual */
 
     char *out_filename = (argc == 3) ? argv[2] : "out.txt";
     FILE *out = freopen(out_filename, "w", stdout);
     if (!out) {
-        perror("Erro ao abrir/criar arquivo de saida");
+        perror("Erro saida");
         return 1;
     }
 
     yyrestart(in);
     yylineno = 1;
     yyparse();
+
+    printrefs(); // imprime tabela de símbolos (opcional)
 
     fclose(in);
     fclose(out);

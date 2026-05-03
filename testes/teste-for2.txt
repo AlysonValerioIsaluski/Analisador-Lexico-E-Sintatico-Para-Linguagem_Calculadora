@@ -1,0 +1,5 @@
+// TESTE 2: Loop Regressivo (Incremento negativo)
+// Resultado Esperado: = 4
+x = 10
+for(i = 3; i > 0; i = i - 1) x = x - i;
+print(x)

@@ -1,0 +1,15 @@
+> > > > > > =    1
+> > > =    0
+> > > =    0
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: teste_and_1
+  -> Linha: 7 | Arq: testes/teste-logic1.txt
+  -> Linha: 6 | Arq: testes/teste-logic1.txt
+ID: teste_and_2
+  -> Linha: 10 | Arq: testes/teste-logic1.txt
+  -> Linha: 9 | Arq: testes/teste-logic1.txt
+ID: teste_and_3
+  -> Linha: 13 | Arq: testes/teste-logic1.txt
+  -> Linha: 12 | Arq: testes/teste-logic1.txt

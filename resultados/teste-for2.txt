@@ -1,0 +1,11 @@
+> > > > =    4
+=    4
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: i
+  -> Linha: 4 | Arq: testes/teste-for2.txt
+ID: x
+  -> Linha: 5 | Arq: testes/teste-for2.txt
+  -> Linha: 4 | Arq: testes/teste-for2.txt
+  -> Linha: 3 | Arq: testes/teste-for2.txt

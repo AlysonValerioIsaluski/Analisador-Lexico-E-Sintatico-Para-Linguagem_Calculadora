@@ -4,12 +4,21 @@
 extern int yylineno;
 void yyerror (char *s, ...);
 
+struct ref {
+    struct ref *next;
+    char *filename;
+    int flags;
+    int lineno;
+};
+
 /* tab. de simbolos */
 struct symbol { /* um nome de variavel */
     char *name;
     double value;
     struct ast *func; /* stmt para funcao */
     struct symlist *syms; /* lista de argumentos */
+    struct ref *reflist; 
+    int is_initialized; /* 1 = inicializado, 0 = nao */
 };
 
 /* tab. de simbolos de tamaho fixo */
@@ -61,6 +70,14 @@ struct flow {
     struct ast *el; /* ramo opcional "else" */
 };
 
+struct forloop {
+    int nodetype; /* tipo P */
+    struct ast *init; /* inicializacao da variavel de controle */
+    struct ast *cond; /* condicao do laco */
+    struct ast *inc; /* incremento do laco */
+    struct ast *tl; /* ramo para lista de comandos (similar ao while) */
+};
+
 struct numval {
     int nodetype; /* tipo K */
     double number;
@@ -80,12 +97,14 @@ struct symasgn {
 /* construcao de uma AST */
 struct ast *newast(int nodetype, struct ast *l, struct ast *r);
 struct ast *newcmp(int cmptype, struct ast *l, struct ast *r);
+struct ast *newlogic(int logictype, struct ast *l, struct ast *r);
 struct ast *newfunc(int functype, struct ast *l);
 struct ast *newcall(struct symbol *s, struct ast *l);
 struct ast *newref(struct symbol *s);
 struct ast *newasgn(struct symbol *s, struct ast *v);
 struct ast *newnum(double d);
 struct ast *newflow(int nodetype, struct ast *cond, struct ast *tl, struct ast *el);
+struct ast *newforloop(int nodetype, struct ast *init, struct ast *cond, struct ast *inc, struct ast *tl);
 
 /* definicao de uma funcao */
 void dodef(struct symbol *name, struct symlist *syms, struct ast *stmts);
@@ -100,3 +119,8 @@ void treefree(struct ast *);
 int yylex(void);
 int yyparse(void);
 void yyrestart(FILE *input_file);
+
+/* Para Tabela de Simbolos */
+extern char *curfilename;
+void addref(int lineno, char *filename, char *word, int flags);
+void printrefs(void); // Para debug

@@ -30,6 +30,10 @@ EXP ([Ee][-+]?[0-9]+)
 ">=" { yylval.fn = 5; return CMP; }
 "<=" { yylval.fn = 6; return CMP; }
 
+ /* operadores lógicos, todos sao token LOGIC */
+"&&" { yylval.fn = 7; return LOGIC; }
+"||" { yylval.fn = 8; return LOGIC; }
+
  /* palavras-chave */
 "if"    { return IF; }
 "then"  { return THEN; }
@@ -37,6 +41,7 @@ EXP ([Ee][-+]?[0-9]+)
 "while" { return WHILE; }
 "do"    { return DO; }
 "let"   { return LET; }
+"for"   { return FOR; }
 
  /* funcoes pre-definidas */
 "sqrt"  { yylval.fn = B_sqrt; return FUNC; }
@@ -45,7 +50,11 @@ EXP ([Ee][-+]?[0-9]+)
 "print" { yylval.fn = B_print; return FUNC; }
 
  /* nomes */
-[a-zA-Z][a-zA-Z0-9]* { yylval.s = lookup(yytext); return NAME; }
+[a-zA-Z_][a-zA-Z0-9_]* { 
+    yylval.s = lookup(yytext); 
+    addref(yylineno, curfilename, yytext, 0); /* Registra o rastreio */
+    return NAME;
+}
 
 [0-9]+"."[0-9]*{EXP}? |
 "."?[0-9]+{EXP}? { yylval.d = atof(yytext); return NUMBER; }

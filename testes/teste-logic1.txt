@@ -1,0 +1,13 @@
+// TESTE 1: Operador AND com diferentes combinacoes de verdade
+// Resultado Esperado:
+// =    1 (Verdadeiro - ambos certos)
+// =    0 (Falso - um errado)
+// =    0 (Falso - ambos errados)
+teste_and_1 = (5 > 3) && (10 == 10)
+print(teste_and_1)
+
+teste_and_2 = (2 < 1) && (5 > 0)
+print(teste_and_2)
+
+teste_and_3 = (1 == 2) && (3 == 4)
+print(teste_and_3)

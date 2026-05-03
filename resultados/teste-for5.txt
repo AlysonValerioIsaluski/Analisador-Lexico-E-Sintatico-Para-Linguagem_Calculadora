@@ -1,0 +1,7 @@
+> > > 
+
+--- TABELA DE SIMBOLOS ---
+ID: j
+  -> Linha: 3 | Arq: testes/teste-for5.txt
+ID: variavel_fantasma
+  -> Linha: 3 | Arq: testes/teste-for5.txt
