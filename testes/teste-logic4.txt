@@ -1,0 +1,19 @@
+// TESTE 4: Uso de AND e OR condicionados a lacos e desvios
+// Resultado Esperado: 
+// =   99 (Passou no IF)
+// =    3 (Incrementou o laco WHILE 3 vezes)
+valor = 0
+chave = 1
+
+// Testa o IF com AND
+if (valor == 0 && chave == 1) then valor = 99; else valor = -1;
+print(valor)
+
+// Testa o WHILE com condicao combinada
+contador = 0
+while (contador < 10 && chave == 1) do contador = contador + 1;
+
+// Quebra a chave para testar OR
+chave = 0
+if (contador == 10 || chave == 1) then chave = 3;
+print(chave)

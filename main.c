@@ -69,6 +69,15 @@ struct ast *newcmp(int cmptype, struct ast *l, struct ast *r) {
     return a;
 }
 
+struct ast *newlogic(int logictype, struct ast *l, struct ast *r) {
+    struct ast *a = malloc(sizeof(struct ast));
+    if(!a) { yyerror("sem espaco"); exit(0); }
+    a->nodetype = '0' + logictype;
+    a->l = l;
+    a->r = r;
+    return a;
+}
+
 struct ast *newfunc(int functype, struct ast *l) {
     struct fncall *a = malloc(sizeof(struct fncall));
     if(!a) { yyerror("sem espaco"); exit(0); }
@@ -131,7 +140,7 @@ void treefree(struct ast *a) {
     switch(a->nodetype) {
         /* duas subarvores */
         case '+': case '-': case '*': case '/': case 'L':
-        case '1': case '2': case '3': case '4': case '5': case '6':
+        case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8':
             treefree(a->r);
         /* uma subarvore */
         case 'C': case 'F':
@@ -280,8 +289,6 @@ N: Referência de Nome
 4: Igual a
 5: Maior ou Igual a
 6: Menor ou igual a
-
-Não implementadas ainda:
 7: Operação lógica AND
 8: Operação lógica OR
 
@@ -333,8 +340,10 @@ double eval(struct ast *a) {
         case '5': v = (eval(a->l) >= eval(a->r)) ? 1 : 0; break;
         case '6': v = (eval(a->l) <= eval(a->r)) ? 1 : 0; break;
 
-        /* implementar AND e OR*/
-
+        /* AND e OR*/
+        case '7': v = (eval(a->l) != 0 && eval(a->r) != 0); break;
+        case '8': v = (eval(a->l) != 0 || eval(a->r) != 0); break;
+        
         /* if/then/else */
         case 'I':
             if(eval(((struct flow *)a)->cond) != 0) {

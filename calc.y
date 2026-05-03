@@ -21,14 +21,19 @@
 
 %token IF THEN ELSE WHILE DO LET FOR
 
-%nonassoc <fn> CMP
+/* Ordem: Da MENOR prioridade para a MAIOR prioridade */
 %right '='
+%left <fn> LOGIC /* && e || resolvem depois de comparar */
+%nonassoc <fn> CMP /* ==, >, < resolvem depois da matematica */
 %left '+' '-'
 %left '*' '/'
-%left <fn> LOGIC
+%right UMINUS   /* Precedencia do menos unario (alta prioridade) */
 
 %type <a> exp stmt list explist init
 %type <sl> symlist
+
+%precedence THEN
+%precedence ELSE
 
 %start calclist
 
@@ -51,6 +56,8 @@ exp: exp CMP exp { $$ = newcmp($2, $1, $3); }
    | exp '-' exp { $$ = newast('-', $1, $3); }
    | exp '*' exp { $$ = newast('*', $1, $3); }
    | exp '/' exp { $$ = newast('/', $1, $3); }
+   | '-' exp %prec UMINUS { $$ = newast('-', newnum(0.0), $2); } /* Transforma -k em 0 - k na AST, para aceitar numeros negativos*/
+   | exp LOGIC exp { $$ = newlogic($2, $1, $3); }
    | '(' exp ')' { $$ = $2; }
    | NUMBER      { $$ = newnum($1); }
    | NAME        { $$ = newref($1); }
@@ -77,8 +84,8 @@ calclist: /* vazio! */
             /* Verifica se o no eh a funcao print */
             int is_print = ($2 && $2->nodetype == 'F' && ((struct fncall *)$2)->functype == B_print);
             
-            /* Imprime apenas se nao for laco, atribuicao ou print */
-            if($2 && $2->nodetype != '=' && $2->nodetype != 'W' && $2->nodetype != 'P' && !is_print) {
+            /* Suprime o print de '=' (Atribuicao), 'W' (While), 'P' (For), 'I' (If) e 'L' (Blocos) */
+            if($2 && $2->nodetype != '=' && $2->nodetype != 'W' && $2->nodetype != 'P' && $2->nodetype != 'I' && $2->nodetype != 'L' && !is_print) {
                 printf("= %4.4g\n", res);
             }
             printf("> ");

@@ -1,0 +1,5 @@
+// TESTE 3: Avaliacao combinada de operadores logicos e relacionais
+// Resultado Esperado: = 1
+// Logica: (Falso) || (Falso) || (Verdadeiro AND Verdadeiro) -> Verdadeiro
+resultado = (1 == 0) || (2 > 5) || (10 >= 5 && 2 == 2)
+print(resultado)

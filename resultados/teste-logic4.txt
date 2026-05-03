@@ -1,0 +1,20 @@
+> > > > > > > > > =   99
+> > > > > > > > > =    3
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: contador
+  -> Linha: 18 | Arq: testes/teste-logic4.txt
+  -> Linha: 14 | Arq: testes/teste-logic4.txt
+  -> Linha: 13 | Arq: testes/teste-logic4.txt
+ID: chave
+  -> Linha: 19 | Arq: testes/teste-logic4.txt
+  -> Linha: 18 | Arq: testes/teste-logic4.txt
+  -> Linha: 17 | Arq: testes/teste-logic4.txt
+  -> Linha: 14 | Arq: testes/teste-logic4.txt
+  -> Linha: 9 | Arq: testes/teste-logic4.txt
+  -> Linha: 6 | Arq: testes/teste-logic4.txt
+ID: valor
+  -> Linha: 10 | Arq: testes/teste-logic4.txt
+  -> Linha: 9 | Arq: testes/teste-logic4.txt
+  -> Linha: 5 | Arq: testes/teste-logic4.txt

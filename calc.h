@@ -97,6 +97,7 @@ struct symasgn {
 /* construcao de uma AST */
 struct ast *newast(int nodetype, struct ast *l, struct ast *r);
 struct ast *newcmp(int cmptype, struct ast *l, struct ast *r);
+struct ast *newlogic(int logictype, struct ast *l, struct ast *r);
 struct ast *newfunc(int functype, struct ast *l);
 struct ast *newcall(struct symbol *s, struct ast *l);
 struct ast *newref(struct symbol *s);
