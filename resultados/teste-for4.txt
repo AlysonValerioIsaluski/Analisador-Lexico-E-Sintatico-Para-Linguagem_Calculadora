@@ -1,0 +1,8 @@
+> > > =    0
+=    0
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: k
+  -> Linha: 4 | Arq: testes/teste-for4.txt
+  -> Linha: 3 | Arq: testes/teste-for4.txt

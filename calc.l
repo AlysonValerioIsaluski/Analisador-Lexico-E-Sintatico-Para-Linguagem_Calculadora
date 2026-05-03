@@ -50,10 +50,10 @@ EXP ([Ee][-+]?[0-9]+)
 "print" { yylval.fn = B_print; return FUNC; }
 
  /* nomes */
-[a-zA-Z][a-zA-Z0-9]* { 
+[a-zA-Z_][a-zA-Z0-9_]* { 
     yylval.s = lookup(yytext); 
-    addref(yylineno, curfilename, yytext, 0); /* <- NOVO: Registra o rastreio */
-    return NAME; 
+    addref(yylineno, curfilename, yytext, 0); /* Registra o rastreio */
+    return NAME;
 }
 
 [0-9]+"."[0-9]*{EXP}? |

@@ -27,7 +27,7 @@
 %left '*' '/'
 %left <fn> LOGIC
 
-%type <a> exp stmt list explist
+%type <a> exp stmt list explist init
 %type <sl> symlist
 
 %start calclist
@@ -37,7 +37,9 @@
 stmt: IF exp THEN list { $$ = newflow('I', $2, $4, NULL); }
     | IF exp THEN list ELSE list { $$ = newflow('I', $2, $4, $6); }
     | WHILE exp DO list { $$ = newflow('W', $2, $4, NULL); }
+    | FOR '(' init ';' exp ';' exp ')' list { $$ = newforloop('P', $3, $5, $7, $9); }
     | exp
+    | ';' { $$ = NULL; } /* Aceita ; solto como comando */
     ;
 
 list: /* vazio! */ { $$ = NULL; }
@@ -52,10 +54,13 @@ exp: exp CMP exp { $$ = newcmp($2, $1, $3); }
    | '(' exp ')' { $$ = $2; }
    | NUMBER      { $$ = newnum($1); }
    | NAME        { $$ = newref($1); }
-   | NAME '=' exp { $$ = newasgn($1, $3); }
+   | init
    | FUNC '(' explist ')' { $$ = newfunc($1, $3); }
    | NAME '(' explist ')' { $$ = newcall($1, $3); }
    ;
+
+init: NAME '=' exp { $$ = newasgn($1, $3); }
+    ;
 
 explist: exp
        | exp ',' explist { $$ = newast('L', $1, $3); }
@@ -66,8 +71,14 @@ symlist: NAME { $$ = newsymlist($1, NULL); }
        ;
 
 calclist: /* vazio! */
+        | calclist EOL { printf("> "); } /* Ignora \n soltos */
         | calclist stmt EOL {
-            printf("= %4.4g\n> ", eval($2));
+            double res = eval($2);
+            /* Imprime apenas se nao for laco ou atribuicao */
+            if($2 && $2->nodetype != '=' && $2->nodetype != 'W' && $2->nodetype != 'P') {
+                printf("= %4.4g\n", res);
+            }
+            printf("> ");
             treefree($2);
         }
         | calclist LET NAME '(' symlist ')' '=' list EOL {

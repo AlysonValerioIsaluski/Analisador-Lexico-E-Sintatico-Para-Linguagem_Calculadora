@@ -70,6 +70,14 @@ struct flow {
     struct ast *el; /* ramo opcional "else" */
 };
 
+struct forloop {
+    int nodetype; /* tipo P */
+    struct ast *init; /* atribuicao da variavel de controle */
+    struct ast *cond; /* condicao do laco */
+    struct ast *inc; /* incremento do laco */
+    struct ast *tl; /* ramo para lista de comandos (similar ao while) */
+};
+
 struct numval {
     int nodetype; /* tipo K */
     double number;
@@ -95,6 +103,7 @@ struct ast *newref(struct symbol *s);
 struct ast *newasgn(struct symbol *s, struct ast *v);
 struct ast *newnum(double d);
 struct ast *newflow(int nodetype, struct ast *cond, struct ast *tl, struct ast *el);
+struct ast *newforloop(int nodetype, struct ast *init, struct ast *cond, struct ast *inc, struct ast *tl);
 
 /* definicao de uma funcao */
 void dodef(struct symbol *name, struct symlist *syms, struct ast *stmts);

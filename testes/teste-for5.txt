@@ -1,0 +1,3 @@
+// TESTE 5: Variável Fantasma na Condição (Segurança Lógica)
+// Resultado Esperado: Mensagem do yyerror disparada: error: Variavel 'variavel_fantasma' nao inicializada antes do uso.
+for(j = 0; j < variavel_fantasma; j = j + 1) print(j);

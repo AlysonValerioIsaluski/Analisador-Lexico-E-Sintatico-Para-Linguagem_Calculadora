@@ -1,0 +1,5 @@
+// TESTE 3: Condição Falsa de Início
+// Resultado Esperado: = 100
+y = 100
+for(i = 10; i < 5; i = i + 1) y = 0;
+print(y)

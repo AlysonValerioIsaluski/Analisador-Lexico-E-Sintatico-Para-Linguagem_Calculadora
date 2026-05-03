@@ -1,0 +1,7 @@
+Para executar os testes, entre no diretório do makefile e execute:
+make
+./calc testes/teste-for1.txt resultados/teste-for1.txt
+./calc testes/teste-for2.txt resultados/teste-for2.txt
+etc...
+
+Verifique se os resultados dos testes no terminal e na pasta 'resultados' são os mesmos que os esperados
