@@ -17,7 +17,8 @@ struct symbol { /* um nome de variavel */
     double value;
     struct ast *func; /* stmt para funcao */
     struct symlist *syms; /* lista de argumentos */
-    struct ref *reflist;
+    struct ref *reflist; 
+    int is_initialized; /* 1 = inicializado, 0 = nao */
 };
 
 /* tab. de simbolos de tamaho fixo */

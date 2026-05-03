@@ -32,6 +32,7 @@ struct symbol *lookup(char *sym) {
             sp->func = NULL;
             sp->syms = NULL;
             sp->reflist = NULL;
+            sp->is_initialized = 0;
             return sp;
         }
 
@@ -251,9 +252,20 @@ double eval(struct ast *a) {
         /* constante */
         case 'K': v = ((struct numval *)a)->number; break;
         /* referencia de nome */
-        case 'N': v = ((struct symref *)a)->s->value; break;
+        case 'N':
+            if (((struct symref *)a)->s->is_initialized == 0) {
+                yyerror("Variavel '%s' nao inicializada antes do uso", ((struct symref *)a)->s->name);
+                return 0.0;
+            }
+            v = ((struct symref *)a)->s->value;
+            break;
+
         /* atribuicao */
-        case '=': v = ((struct symasgn *)a)->s->value = eval(((struct symasgn *)a)->v); break;
+        case '=':
+            v = eval(((struct symasgn *)a)->v);
+            ((struct symasgn *)a)->s->value = v;
+            ((struct symasgn *)a)->s->is_initialized = 1; /* Marca como inicializada */
+            break;
 
         /* expressoes aritimeticas */
         case '+': v = eval(a->l) + eval(a->r); break;
@@ -329,7 +341,7 @@ void addref(int lineno, char *filename, char *word, int flags) {
 }
 
 void printrefs(void) {
-    printf("\n--- TABELA DE SIMBOLOS ---\n");
+    printf("\n\n--- TABELA DE SIMBOLOS ---\n");
     for (int i = 0; i < NHASH; i++) {
         struct symbol *sp = &symtab[i];
         if (sp->name) {
