@@ -1,4 +1,0 @@
-// TESTE 7: Funcionamento básico
-x = 0
-y = x + 10
-print(x)

@@ -1,0 +1,3 @@
+// variavel sem inicializar
+print(a)
+a = 5

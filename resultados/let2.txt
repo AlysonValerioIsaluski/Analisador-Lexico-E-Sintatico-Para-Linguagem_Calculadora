@@ -1,0 +1,14 @@
+c> c> c> Defined fibonacci
+> > =   21
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: n
+  -> Linha: 4 | Arq: testes/let2.txt
+  -> Linha: 3 | Arq: testes/let2.txt
+  -> Linha: 2 | Arq: testes/let2.txt
+  -> Linha: 1 | Arq: testes/let2.txt
+ID: fibonacci
+  -> Linha: 6 | Arq: testes/let2.txt
+  -> Linha: 4 | Arq: testes/let2.txt
+  -> Linha: 1 | Arq: testes/let2.txt

@@ -1,0 +1,10 @@
+> > > =    0
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: a
+  -> Linha: 4 | Arq: testes/erro5.txt
+  -> Linha: 2 | Arq: testes/erro5.txt
+ID: b
+  -> Linha: 4 | Arq: testes/erro5.txt
+  -> Linha: 3 | Arq: testes/erro5.txt

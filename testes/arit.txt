@@ -1,0 +1,13 @@
+a = 1 - 2 * 3 / 4 + 5
+b = 5e10
+c = 10.4E+5 
+d = .8e-3
+e = -10
+f = 4*(10/(2+2))
+
+print(a)
+print(b)
+print(c)
+print(d)
+print(e)
+print(f)

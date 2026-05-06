@@ -1,0 +1,1 @@
+while do a = 0;

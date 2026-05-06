@@ -1,0 +1,9 @@
+// falta ';'s
+let fatorial(n) = \
+total = 1; \
+while n > 0 do \
+total = total * n; \
+n = n - 1; \
+total;
+
+print(fatorial(5))

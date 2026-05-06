@@ -1,8 +1,3 @@
-// TESTE 2: Operador OR com diferentes combinacoes de verdade
-// Resultado Esperado:
-// =    1 (Verdadeiro - um certo)
-// =    1 (Verdadeiro - ambos certos)
-// =    0 (Falso - ambos errados)
 teste_or_1 = (1 == 2) || (3 <= 3)
 print(teste_or_1)
 

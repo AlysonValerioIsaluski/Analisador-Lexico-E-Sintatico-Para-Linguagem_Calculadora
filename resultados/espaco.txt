@@ -1,0 +1,9 @@
+> > > > > > > > =    0
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: a
+  -> Linha: 9 | Arq: testes/espaco.txt
+  -> Linha: 1 | Arq: testes/espaco.txt
+ID: b
+  -> Linha: 2 | Arq: testes/espaco.txt

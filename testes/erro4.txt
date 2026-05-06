@@ -1,0 +1,3 @@
+// for sem inicializar
+i = 0
+for (i < 0; i++) print(i);

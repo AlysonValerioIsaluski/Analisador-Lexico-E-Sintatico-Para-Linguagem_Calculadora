@@ -1,0 +1,11 @@
+> > > =  100
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: i
+  -> Linha: 3 | Arq: testes/while2.txt
+  -> Linha: 2 | Arq: testes/while2.txt
+ID: y
+  -> Linha: 4 | Arq: testes/while2.txt
+  -> Linha: 3 | Arq: testes/while2.txt
+  -> Linha: 1 | Arq: testes/while2.txt

@@ -1,0 +1,6 @@
+a = 3-2
+
+if a then b = 0; a = 0; else b = 1;
+
+print(a)
+print(b)
