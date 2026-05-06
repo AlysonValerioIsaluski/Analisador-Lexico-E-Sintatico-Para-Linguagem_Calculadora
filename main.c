@@ -203,6 +203,7 @@ static double calluser(struct ufncall *f) {
     struct symlist *sl; /* argumentos da funcao */
     struct ast *args = f->l; /* argumentos usados na chamada */
     double *oldval, *newval; /* para salvar valores de argumentos do escopo global */
+    int *oldinit;
     double v;
     int nargs;
     int i;
@@ -219,7 +220,8 @@ static double calluser(struct ufncall *f) {
     /* prepara para salvar argumentos */
     oldval = (double *)malloc(nargs * sizeof(double));
     newval = (double *)malloc(nargs * sizeof(double));
-    if(!oldval || !newval) {
+    oldinit = (int *)malloc(nargs * sizeof(int));
+    if(!oldval || !newval || !oldinit) {
         yyerror("Sem espaco em %s", fn->name);
         return 0.0;
     }
@@ -228,7 +230,7 @@ static double calluser(struct ufncall *f) {
     for(i = 0; i < nargs; i++) {
         if(!args) {
             yyerror("poucos argumentos na chamada da funcao %s", fn->name);
-            free(oldval); free(newval);
+            free(oldval); free(newval); free(oldinit);
             return 0.0;
         }
         if(args->nodetype == 'L') { /* se eh uma lista de nos */
@@ -245,7 +247,10 @@ static double calluser(struct ufncall *f) {
     for(i = 0; i < nargs; i++) {
         struct symbol *s = sl->sym;
         oldval[i] = s->value;
+        oldinit[i] = s->is_initialized; /* Salva o status original */
+
         s->value = newval[i];
+        s->is_initialized = 1; /* Forca como inicializado para a funcao poder rodar */
         sl = sl->next;
     }
     free(newval);
@@ -258,9 +263,12 @@ static double calluser(struct ufncall *f) {
     for(i = 0; i < nargs; i++) {
         struct symbol *s = sl->sym;
         s->value = oldval[i];
+        s->is_initialized = oldinit[i]; /* Restaura o status original */
         sl = sl->next;
     }
     free(oldval);
+    free(oldinit);
+    
     return v;
 }
 

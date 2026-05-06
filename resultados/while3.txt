@@ -1,0 +1,5 @@
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: a
+  -> Linha: 1 | Arq: testes/while3.txt

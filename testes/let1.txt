@@ -1,0 +1,8 @@
+let somar(a1, b1) = a1 + b1;
+let subtrair(a2, b2) = a2 - b2;
+let dividir(a3, b3) = if b3 == 0 then 0; else a3 / b3;;;
+
+print(somar(1, 2))
+print(subtrair(6, 1))
+print(dividir(5, 0))
+print(dividir(5, 2))

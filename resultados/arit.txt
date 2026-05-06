@@ -1,0 +1,27 @@
+> > > > > > > =  4.5
+> = 5e+10
+> = 1.04e+06
+> = 0.0008
+> =  -10
+> =   10
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: a
+  -> Linha: 8 | Arq: testes/arit.txt
+  -> Linha: 1 | Arq: testes/arit.txt
+ID: b
+  -> Linha: 9 | Arq: testes/arit.txt
+  -> Linha: 2 | Arq: testes/arit.txt
+ID: c
+  -> Linha: 10 | Arq: testes/arit.txt
+  -> Linha: 3 | Arq: testes/arit.txt
+ID: d
+  -> Linha: 11 | Arq: testes/arit.txt
+  -> Linha: 4 | Arq: testes/arit.txt
+ID: e
+  -> Linha: 12 | Arq: testes/arit.txt
+  -> Linha: 5 | Arq: testes/arit.txt
+ID: f
+  -> Linha: 13 | Arq: testes/arit.txt
+  -> Linha: 6 | Arq: testes/arit.txt

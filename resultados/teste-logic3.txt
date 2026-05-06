@@ -1,7 +1,10 @@
-> > > > =    1
+> > =  100
 > 
 
 --- TABELA DE SIMBOLOS ---
-ID: resultado
-  -> Linha: 5 | Arq: testes/teste-logic3.txt
-  -> Linha: 4 | Arq: testes/teste-logic3.txt
+ID: i
+  -> Linha: 2 | Arq: testes/teste-for3.txt
+ID: y
+  -> Linha: 3 | Arq: testes/teste-for3.txt
+  -> Linha: 2 | Arq: testes/teste-for3.txt
+  -> Linha: 1 | Arq: testes/teste-for3.txt

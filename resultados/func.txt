@@ -1,0 +1,15 @@
+> > > > = 20.09
+> = 1.414
+> = 2.303
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: a
+  -> Linha: 5 | Arq: testes/func.txt
+  -> Linha: 1 | Arq: testes/func.txt
+ID: b
+  -> Linha: 6 | Arq: testes/func.txt
+  -> Linha: 2 | Arq: testes/func.txt
+ID: c
+  -> Linha: 7 | Arq: testes/func.txt
+  -> Linha: 3 | Arq: testes/func.txt

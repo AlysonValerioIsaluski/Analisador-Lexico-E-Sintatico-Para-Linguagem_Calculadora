@@ -1,0 +1,2 @@
+a = b = 3
+if (a + b == 4) then print(a + b); else a = 2; b = 2; print(a - b);

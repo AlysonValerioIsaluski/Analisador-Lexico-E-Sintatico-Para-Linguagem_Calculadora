@@ -1,0 +1,16 @@
+> c> c> c> c> c> > > =    0
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: n
+  -> Linha: 6 | Arq: testes/erro6.txt
+  -> Linha: 5 | Arq: testes/erro6.txt
+  -> Linha: 4 | Arq: testes/erro6.txt
+  -> Linha: 2 | Arq: testes/erro6.txt
+ID: total
+  -> Linha: 7 | Arq: testes/erro6.txt
+  -> Linha: 5 | Arq: testes/erro6.txt
+  -> Linha: 3 | Arq: testes/erro6.txt
+ID: fatorial
+  -> Linha: 9 | Arq: testes/erro6.txt
+  -> Linha: 2 | Arq: testes/erro6.txt

@@ -1,0 +1,32 @@
+Defined somar
+> Defined subtrair
+> Defined dividir
+> > =    3
+> =    5
+> =    0
+> =  2.5
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: b2
+  -> Linha: 2 | Arq: testes/let1.txt
+ID: b3
+  -> Linha: 3 | Arq: testes/let1.txt
+ID: b1
+  -> Linha: 1 | Arq: testes/let1.txt
+ID: a1
+  -> Linha: 1 | Arq: testes/let1.txt
+ID: a3
+  -> Linha: 3 | Arq: testes/let1.txt
+ID: a2
+  -> Linha: 2 | Arq: testes/let1.txt
+ID: dividir
+  -> Linha: 8 | Arq: testes/let1.txt
+  -> Linha: 7 | Arq: testes/let1.txt
+  -> Linha: 3 | Arq: testes/let1.txt
+ID: somar
+  -> Linha: 5 | Arq: testes/let1.txt
+  -> Linha: 1 | Arq: testes/let1.txt
+ID: subtrair
+  -> Linha: 6 | Arq: testes/let1.txt
+  -> Linha: 2 | Arq: testes/let1.txt

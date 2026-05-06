@@ -1,0 +1,10 @@
+> =    0
+> 
+
+--- TABELA DE SIMBOLOS ---
+ID: a
+  -> Linha: 2 | Arq: testes/if3.txt
+  -> Linha: 1 | Arq: testes/if3.txt
+ID: b
+  -> Linha: 2 | Arq: testes/if3.txt
+  -> Linha: 1 | Arq: testes/if3.txt
